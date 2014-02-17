@@ -54,7 +54,7 @@ for list in indra_board:
                 if pi.isdigit():
                     if pi in sgp:
                         trello.cards.update_name( id, sgp[ pi ] )
-                        trello.cards.update_idList( id, list['id'] )
+                        trello.cards.update_idList( id, list_id['Desarrollo'] )
     if list['name'] == 'Desarrollo' or list['name'] == 'Pruebas':
         # aca estan las tarjetas trackeables
         cards = trello.lists.get_card( list['id'] )
