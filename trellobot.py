@@ -65,3 +65,8 @@ for list in indra_board:
             if solman.isdigit():
                 if solman in status:
                     trello.cards.update_idList( id, list_id[ status[solman] ] )
+            if name[0:2] == 'PI':
+                pi = name[2:8]
+                if pi.isdigit():
+                    if pi in sgp:
+                        trello.cards.update_name( id, sgp[ pi ] )
