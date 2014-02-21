@@ -45,9 +45,9 @@ for list in indra_board:
                 trello.cards.update_name( id, name )
                 trello.cards.update_desc( id, '' )
                 trello.cards.new_label( id, 'blue' )
-                if name.find('URGENCIA') > 0:
+                if name.lower().find('urgencia') > 0:
                     trello.cards.new_label( id, 'red' )
-                if name.find('EMERGENCIA') > 0:
+                if name.lower().find('emergenciA') > 0:
                     trello.cards.new_label( id, 'yellow' )
             if name[0:2] == 'PI':
                 pi = name[2:8]
