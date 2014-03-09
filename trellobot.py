@@ -24,49 +24,45 @@ idBoard = get_idBoard( TRELLO_BOT, TRELLO_BOARD )
 solman = pysolman( GMAIL_USER, GMAIL_PASS )
 solman.check_updates()
 
-status = solman.get_status()
-sgp = solman.get_pi()
+if solman.mails:
+    status = solman.get_status()
+    sgp = solman.get_pi()
 
-indra_board = trello.boards.get_list( idBoard )
+    indra_board = trello.boards.get_list( idBoard )
 
-list_id = {}
-for list in indra_board:
-    list_id[ list['name'] ] = list['id']
+    list_id = {}
+    for list in indra_board:
+        list_id[ list['name'] ] = list['id']
 
-for list in indra_board:
-    # Actualizo las nuevas tarjetas que entran
-    if list['name'] == "Estimacion":
-        cards_estimacion = trello.lists.get_card( list['id'] )
-        for card in cards_estimacion:
-            name = card['name']
-            id = card['id']
-            if name[0:3] == 'RV:':
-                name = "PI%s - %s"%( name[13:19], name[34:-2] )
-                trello.cards.update_name( id, name )
-                trello.cards.update_desc( id, '' )
-                trello.cards.new_label( id, 'blue' )
-                if name.lower().find('urgencia') > 0:
-                    trello.cards.new_label( id, 'red' )
-                if name.lower().find('emergenciA') > 0:
-                    trello.cards.new_label( id, 'yellow' )
-            if name[0:2] == 'PI':
-                pi = name[2:8]
-                if pi.isdigit():
-                    if pi in sgp:
-                        trello.cards.update_name( id, sgp[ pi ] )
-                        trello.cards.update_idList( id, list_id['Desarrollo'] )
-    if list['name'] == 'Desarrollo' or list['name'] == 'Pruebas':
-        # aca estan las tarjetas trackeables
-        cards = trello.lists.get_card( list['id'] )
-        for card in cards:
-            name = card['name']
-            id = card['id']
-            solman = name[0:10]
-            if solman.isdigit():
-                if solman in status:
-                    trello.cards.update_idList( id, list_id[ status[solman] ] )
-            if name[0:2] == 'PI':
-                pi = name[2:8]
-                if pi.isdigit():
-                    if pi in sgp:
-                        trello.cards.update_name( id, sgp[ pi ] )
+    for list in indra_board:
+        # Actualizo las nuevas tarjetas que entran
+        if list['name'] == "Estimacion":
+            cards_estimacion = trello.lists.get_card( list['id'] )
+            for card in cards_estimacion:
+                name = card['name']
+                id = card['id']
+                if name[0:3] == 'RV:':
+                    name = "PI%s - %s"%( name[13:19], name[34:-2] )
+                    trello.cards.update_name( id, name )
+                    trello.cards.update_desc( id, '' )
+                    trello.cards.new_label( id, 'blue' )
+                    if name.find('URGENCIA') > 0:
+                        trello.cards.new_label( id, 'red' )
+                    if name.find('EMERGENCIA') > 0:
+                        trello.cards.new_label( id, 'yellow' )
+                if name[0:2] == 'PI':
+                    pi = name[2:8]
+                    if pi.isdigit():
+                        if pi in sgp:
+                            trello.cards.update_name( id, sgp[ pi ] )
+                            trello.cards.update_idList( id, list_id['Desarrollo'] )
+        if list['name'] == 'Desarrollo' or list['name'] == 'Pruebas':
+            # aca estan las tarjetas trackeables
+            cards = trello.lists.get_card( list['id'] )
+            for card in cards:
+                name = card['name']
+                id = card['id']
+                solman = name[0:10]
+                if solman.isdigit():
+                    if solman in status:
+                        trello.cards.update_idList( id, list_id[ status[solman] ] )
